@@ -3,9 +3,9 @@ import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 
-train_loop = 40000
+train_loop = 50000
 learn_rate = 20
-batch_size = 1024
+batch_size = 512
 
 n_input = 784
 n_hidden1 = 16
