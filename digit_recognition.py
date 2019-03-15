@@ -12,7 +12,7 @@ n_hidden1 = 16
 n_hidden2 = 16
 n_output = 10
 
-x = tf.placeholder(tf.float32 , [None, n_input])
+x = tf.placeholder(tf.float32, [None, n_input])
 label = tf.placeholder(tf.float32, [None, n_output])
 
 with tf.name_scope(name='layer1'):
@@ -36,20 +36,34 @@ train_method = tf.train.GradientDescentOptimizer(learn_rate).minimize(loss)
 correct_pred = tf.equal(tf.argmax(y3, 1), tf.argmax(label, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 
+# init scalar for tensorboard
+loss_scalar = tf.summary.scalar("loss", loss)
+accuracy_scalar = tf.summary.scalar("accuracy", accuracy)
+
+# init saver to save model
 saver = tf.train.Saver()
 
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
-    #writer = tf.summary.FileWriter('./graphs3', graph=tf.get_default_graph())
+    writer = tf.summary.FileWriter('./graphs', graph=tf.get_default_graph())
     for step in range(train_loop):
         batch_x, batch_label = mnist.train.next_batch(batch_size)
         sess.run(train_method, {x: batch_x, label: batch_label})
+        # tensorboard
+        '''
+        summary = sess.run(loss_scalar, {x: batch_x, label: batch_label})
+        summary1 = sess.run(accuracy_scalar, {x: batch_x, label: batch_label})
+        writer.add_summary(summary, step)
+        writer.add_summary(summary1, step)
+        '''
+
         if step % 500 == 0:
             print("Step:", step, " Loss:", sess.run(loss, {x: batch_x, label: batch_label}), " Accuracy:", sess.run(accuracy, {x: batch_x, label: batch_label}))
 
     print("testing:")
     test_x, test_label = mnist.test.next_batch(1000)
     print(sess.run(accuracy, {x: test_x, label: test_label}))
+
     saver.save(sess, "./model/model.ckpt")
 
 
