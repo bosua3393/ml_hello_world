@@ -3,13 +3,13 @@ import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 
-train_loop = 50000
+train_loop = 100000
 learn_rate = 20
 batch_size = 512
 
 n_input = 784
-n_hidden1 = 16
-n_hidden2 = 16
+n_hidden1 = 32
+n_hidden2 = 32
 n_output = 10
 
 x = tf.placeholder(tf.float32, [None, n_input])
@@ -49,15 +49,15 @@ with tf.Session() as sess:
     for step in range(train_loop):
         batch_x, batch_label = mnist.train.next_batch(batch_size)
         sess.run(train_method, {x: batch_x, label: batch_label})
-        # tensorboard
-        '''
-        summary = sess.run(loss_scalar, {x: batch_x, label: batch_label})
-        summary1 = sess.run(accuracy_scalar, {x: batch_x, label: batch_label})
-        writer.add_summary(summary, step)
-        writer.add_summary(summary1, step)
-        '''
 
         if step % 500 == 0:
+            # tensorboard
+            '''
+            summary = sess.run(loss_scalar, {x: batch_x, label: batch_label})
+            summary1 = sess.run(accuracy_scalar, {x: batch_x, label: batch_label})
+            writer.add_summary(summary, step)
+            writer.add_summary(summary1, step)
+            '''
             print("Step:", step, " Loss:", sess.run(loss, {x: batch_x, label: batch_label}), " Accuracy:", sess.run(accuracy, {x: batch_x, label: batch_label}))
 
     print("testing:")
@@ -65,6 +65,5 @@ with tf.Session() as sess:
     print(sess.run(accuracy, {x: test_x, label: test_label}))
 
     saver.save(sess, "./model/model.ckpt")
-
 
 

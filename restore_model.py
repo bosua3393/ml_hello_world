@@ -4,8 +4,8 @@ mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 from numpy import round
 
 n_input = 784
-n_hidden1 = 16
-n_hidden2 = 16
+n_hidden1 = 300
+n_hidden2 = 300
 n_output = 10
 
 x = tf.placeholder(tf.float32, [None, n_input])
@@ -37,6 +37,6 @@ with tf.Session() as sess:
     saver.restore(sess, "./best_model/model.ckpt")
 
     print("testing:")
-    test_x, test_label = mnist.test.next_batch(10000)
+    test_x, test_label = mnist.test.next_batch(100000)
     print(sess.run(accuracy, {x: test_x, label: test_label}))
     # print(round(w2.eval()))
