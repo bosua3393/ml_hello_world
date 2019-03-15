@@ -4,9 +4,9 @@ from numpy import round
 from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 
-train_loop = 10000
-learn_rate = 10
-batch_size = 1000
+train_loop = 20000
+learn_rate = 20
+batch_size = 512
 
 n_input = 784
 n_hidden1 = 16
@@ -40,17 +40,15 @@ accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     #writer = tf.summary.FileWriter('./graphs3', graph=tf.get_default_graph())
-    batch_x, batch_label = mnist.train.next_batch(batch_size)
     for step in range(train_loop):
+        batch_x, batch_label = mnist.train.next_batch(batch_size)
         sess.run(train_method, {x: batch_x, label: batch_label})
-        if step % 200 == 0:
+        if step % 500 == 0:
             print("Step:", step, " Loss:", sess.run(loss, {x: batch_x, label: batch_label}), " Accuracy:", sess.run(accuracy, {x: batch_x, label: batch_label}))
 
     print("testing:")
-    for i in range(10):
-        print('-----------------------------------')
-        test_x, test_label = mnist.test.next_batch(1)
-        print(round(sess.run(y3, {x: test_x, label: test_label})))
-        print(test_label)
+    test_x, test_label = mnist.test.next_batch(1000)
+    print(sess.run(accuracy, {x: test_x, label: test_label}))
+
 
 
