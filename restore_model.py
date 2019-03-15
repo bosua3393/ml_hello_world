@@ -1,6 +1,7 @@
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
+from numpy import round
 
 n_input = 784
 n_hidden1 = 16
@@ -38,4 +39,4 @@ with tf.Session() as sess:
     print("testing:")
     test_x, test_label = mnist.test.next_batch(10000)
     print(sess.run(accuracy, {x: test_x, label: test_label}))
-    print(w3.eval())
+    # print(round(w2.eval()))
