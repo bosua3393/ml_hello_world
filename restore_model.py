@@ -1,18 +1,13 @@
 import tensorflow as tf
-
 from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
-
-train_loop = 40000
-learn_rate = 20
-batch_size = 1024
 
 n_input = 784
 n_hidden1 = 16
 n_hidden2 = 16
 n_output = 10
 
-x = tf.placeholder(tf.float32 , [None, n_input])
+x = tf.placeholder(tf.float32, [None, n_input])
 label = tf.placeholder(tf.float32, [None, n_output])
 
 with tf.name_scope(name='layer1'):
@@ -30,27 +25,16 @@ with tf.name_scope(name='output_layer'):
     b3 = tf.Variable(tf.random_uniform((1, n_output), -1, 1), name='bias3')
     y3 = tf.nn.softmax(tf.matmul(y2, w3) + b3, name='output3')
 
-loss = tf.losses.sigmoid_cross_entropy(label, y3)
-train_method = tf.train.GradientDescentOptimizer(learn_rate).minimize(loss)
 
 correct_pred = tf.equal(tf.argmax(y3, 1), tf.argmax(label, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 
+
 saver = tf.train.Saver()
 
 with tf.Session() as sess:
-    sess.run(tf.global_variables_initializer())
-    #writer = tf.summary.FileWriter('./graphs3', graph=tf.get_default_graph())
-    for step in range(train_loop):
-        batch_x, batch_label = mnist.train.next_batch(batch_size)
-        sess.run(train_method, {x: batch_x, label: batch_label})
-        if step % 500 == 0:
-            print("Step:", step, " Loss:", sess.run(loss, {x: batch_x, label: batch_label}), " Accuracy:", sess.run(accuracy, {x: batch_x, label: batch_label}))
+    saver.restore(sess, "./model/model.ckpt")
 
     print("testing:")
-    test_x, test_label = mnist.test.next_batch(1000)
+    test_x, test_label = mnist.test.next_batch(10000)
     print(sess.run(accuracy, {x: test_x, label: test_label}))
-    saver.save(sess, "./model/model.ckpt")
-
-
-
