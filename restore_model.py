@@ -33,10 +33,15 @@ accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 
 saver = tf.train.Saver()
 
+from real_data import my_image
+test = my_image
+
 with tf.Session() as sess:
     saver.restore(sess, "./best_model/model.ckpt")
-
+    print(sess.run(y3, {x: test}))
+    '''
     print("testing:")
     test_x, test_label = mnist.test.next_batch(100000)
     print(sess.run(accuracy, {x: test_x, label: test_label}))
     # print(round(w2.eval()))
+    '''
