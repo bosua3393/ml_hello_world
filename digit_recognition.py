@@ -1,4 +1,5 @@
 import tensorflow as tf
+import numpy as np
 from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 from numpy import round
@@ -38,7 +39,10 @@ test = my_image
 
 with tf.Session() as sess:
     saver.restore(sess, "./best_model/model.ckpt")
-    print(sess.run(y3, {x: test}))
+    output = sess.run(y3, {x: test})
+    for row in range(28):
+        print(test[0][row*28:(row+1)*28])
+    print(f'digit recognized: {np.argmax(output[0])}')
     '''
     print("testing:")
     test_x, test_label = mnist.test.next_batch(100000)
