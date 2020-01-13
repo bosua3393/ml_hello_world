@@ -33,7 +33,7 @@ accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 
 saver = tf.train.Saver()
 
-from real_data import my_image
+from image import my_image
 test = my_image
 
 with tf.Session() as sess:
